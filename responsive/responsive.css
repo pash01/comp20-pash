@@ -1,0 +1,68 @@
+@media screen and (min-width: 1200px) {
+	.garfield {	
+		height: 132px;
+		width: 400px;
+		background:url(garfield.gif) 0px 0px;
+	}
+}
+@media screen and (min-width: 1100px) and (max-width: 1200px ) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) -400px 0px;
+	}
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1100px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) 0px -132px;
+	}
+}
+
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) -200px -132px;
+	}
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) -400px -132px;
+	}
+}
+
+@media screen and (min-width: 700px) and (max-width: 800px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) 0px -264px;
+	}
+}
+
+@media screen and (min-width: 600px) and (max-width: 700px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) -200px -264px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.garfield {	
+		height: 132px;
+		width: 200px;
+		background:url(garfield.gif) -400px -264px;
+	}
+}
+
+
+
+
+
+

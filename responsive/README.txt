@@ -1,0 +1,1 @@
+To the best of my knowledge, all the work in the lab has been implemented correctly. I have collaborated with Rati Srinivasan and Ming Chow on this assignment. This assignment took me approximately 2 hours to complete.
