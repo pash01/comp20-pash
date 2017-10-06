@@ -1,0 +1,34 @@
+h1 {
+	text-align: center;
+	font-family: "Times New Roman";
+	font-size: 32pt;
+	color: red;
+	font-weight: bold;
+	border-style: dashed;
+	border-top-color: orange;
+	border-bottom-color: yellow;
+	border-right-style: dotted;
+	border-left-style: dotted;
+	margin-left: 30%;
+	margin-right: 30%;
+}
+
+video {
+	min-width: 30rem;
+	min-height: 20rem;
+	margin-left: 28%;
+	border-style: solid;
+	border-top-color: orange;
+	border-bottom-color: yellow;
+}
+
+body {
+	background-color: black;
+}
+
+p {
+	text-align: center;
+	font-family: "Times New Roman";
+	font-size: 16pt;
+	color: red;
+}
