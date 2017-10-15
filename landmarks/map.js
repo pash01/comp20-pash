@@ -3,7 +3,8 @@ var myLat;
 var myLng;
 var myLogin = "CzDLNpQw";
 
-var landmark_distance;
+var closest_landmark_distance = 1000000;
+var closest_landmark_title = "";
 
 var request = new XMLHttpRequest();
 var url = "https://defense-in-derpth.herokuapp.com/sendLocation";
@@ -56,7 +57,7 @@ function renderMap() {
 	my_marker = new google.maps.Marker({
 		position: my_position,
 		icon: 'me_icon.png',
-		title: "Here I Am! My login name is: " + myLogin
+		title: "Here I Am! The closest landmark to me is " + closest_landmark_title + " , and is " + closest_landmark_distance.toFixed(2) + " miles away."
 	});
 	my_marker.setMap(map);
 		
@@ -91,7 +92,14 @@ function populateMap(responseData) {
 	for (var i = 0; i < responseData.landmarks.length; i++) {
 		var landmark_position = new google.maps.LatLng(responseData.landmarks[i].geometry.coordinates[1], 
 													   responseData.landmarks[i].geometry.coordinates[0]);
-		landmark_distance = (google.maps.geometry.spherical.computeDistanceBetween(landmark_position, my_position)) * 0.000621371;
+		var landmark_distance = (google.maps.geometry.spherical.computeDistanceBetween(landmark_position, my_position)) * 0.000621371;
+
+		//find landmark closest to me
+		if (landmark_distance <= closest_landmark_distance) {
+			closest_landmark_distance = landmark_distance;
+			closest_landmark_title = responseData.landmarks[i].properties.Location_Name;
+		}
+
 		// only show landmarks within one mile 
 		if (landmark_distance <= 1) {
 			var landmark_marker = new google.maps.Marker({
