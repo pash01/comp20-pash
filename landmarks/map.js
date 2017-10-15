@@ -3,6 +3,7 @@ var myLat;
 var myLng;
 var myLogin = "CzDLNpQw";
 
+var closest_landmark_position;
 var closest_landmark_distance = 1000000;
 var closest_landmark_title = "";
 
@@ -53,15 +54,25 @@ function renderMap() {
 	// Update map and go there...
 	map.panTo(my_position);
 	
-	// Create a marker
+	// Create my marker
 	my_marker = new google.maps.Marker({
 		position: my_position,
 		icon: 'me_icon.png',
 		title: "Here I Am! The closest landmark to me is " + closest_landmark_title + " , and is " + closest_landmark_distance.toFixed(2) + " miles away."
 	});
 	my_marker.setMap(map);
+
+	// create polyline between me and the closest landmark to me
+	var my_path = new google.maps.Polyline({
+		path: [my_position, closest_landmark_position],
+		geodesic: true,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+	my_path.setMap(map);
 		
-	// Open info window on click of marker
+	// Open my info window on click of marker
 	google.maps.event.addListener(my_marker, 'click', function() {
 		infowindow.setContent(this.title);
 		infowindow.open(map, this);
@@ -98,6 +109,7 @@ function populateMap(responseData) {
 		if (landmark_distance <= closest_landmark_distance) {
 			closest_landmark_distance = landmark_distance;
 			closest_landmark_title = responseData.landmarks[i].properties.Location_Name;
+			closest_landmark_position = landmark_position;
 		}
 
 		// only show landmarks within one mile 
