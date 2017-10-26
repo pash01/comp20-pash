@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        // Your work will be done here...
+        $(document).keypress(function(e) {
+            if(e.which == 13) {
+                var currentdate = new Date(); // get human readable date
+                var text = $('#msg').val(); // get input from textbox
+                $('#log').prepend(currentdate + " - " + text + "<br/>");
+                $('#msg').val(""); // clear textbook after entry into log
+            }
+        });     
     </script>
 </head>
 
