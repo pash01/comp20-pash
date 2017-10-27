@@ -15,9 +15,10 @@
 
         $(document).keypress(function(e) {
             if(e.which == 13) {
-                currentdate = new Date(); // get human readable date
-                var hr_currentdate = "";
-                milliseconds = currentdate.getMilliseconds().toString();
+                currentdate = new Date(); // get date
+                var hr_currentdate = ""; // create var for human readable date
+                milliseconds = currentdate.getMilliseconds().toString(); 
+                // format milliseconds correctly 
                 if (milliseconds.length == 1) {
                     milliseconds = '0' + '0' + milliseconds;
                 } else if (milliseconds.length == 2) {
@@ -26,9 +27,7 @@
 
                 currentdate = currentdate.toString().split(" "); // make currentdate a string and split by spaces 
 
-                for (var i = 0; i < (currentdate.length - 2); i++) {
-                    console.log("hr_currentdate: " + hr_currentdate);
-                    console.log("currentdate: " + currentdate);
+                for (var i = 0; i < (currentdate.length - 2); i++) { // create human readable date
                     if (i == currentdate.length - 3) {
                         hr_currentdate = hr_currentdate + " " + currentdate[i];
                     } else {
@@ -41,7 +40,7 @@
                 text = hr_currentdate + " - " + textbox_message + "<br/>";
                 localStorage.setItem(hr_currentdate, text); // save text to local storage
                 $('#log').prepend(text);
-                $('#msg').val(""); // clear textbook after entry into log
+                $('#msg').val(""); // clear textbox after entry into log
             }
         });
 
