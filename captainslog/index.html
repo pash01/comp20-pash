@@ -8,14 +8,50 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
+        var currentdate;
+        var textbox_message;
+        var text = "";
+        var milliseconds;
+
         $(document).keypress(function(e) {
             if(e.which == 13) {
-                var currentdate = new Date(); // get human readable date
-                var text = $('#msg').val(); // get input from textbox
-                $('#log').prepend(currentdate + " - " + text + "<br/>");
+                currentdate = new Date(); // get human readable date
+                var hr_currentdate = "";
+                milliseconds = currentdate.getMilliseconds().toString();
+                if (milliseconds.length == 1) {
+                    milliseconds = '0' + '0' + milliseconds;
+                } else if (milliseconds.length == 2) {
+                    milliseconds = '0' + milliseconds;
+                }
+
+                currentdate = currentdate.toString().split(" "); // make currentdate a string and split by spaces 
+
+                for (var i = 0; i < (currentdate.length - 2); i++) {
+                    console.log("hr_currentdate: " + hr_currentdate);
+                    console.log("currentdate: " + currentdate);
+                    if (i == currentdate.length - 3) {
+                        hr_currentdate = hr_currentdate + " " + currentdate[i];
+                    } else {
+                         hr_currentdate = hr_currentdate + " " + currentdate[i] + " ";
+                    }
+                }
+                hr_currentdate = hr_currentdate + ":" + milliseconds; // append milliseconds to human readable date
+
+                textbox_message = $('#msg').val(); // get input from textbox
+                text = hr_currentdate + " - " + textbox_message + "<br/>";
+                localStorage.setItem(hr_currentdate, text); // save text to local storage
+                $('#log').prepend(text);
                 $('#msg').val(""); // clear textbook after entry into log
             }
-        });     
+        });
+
+        window.onload = function() {
+            if (localStorage.length !== null) {
+                for (var i = 0; i < localStorage.length; i++) {
+                    $('#log').prepend(localStorage.getItem(localStorage.key(i)));
+                }
+            }
+        }
     </script>
 </head>
 
