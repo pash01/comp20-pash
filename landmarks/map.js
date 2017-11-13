@@ -8,7 +8,7 @@ var closest_landmark_distance = 1000000; // set initially to nonsense value
 var closest_landmark_title = ""; // set initially to nonsense value
 
 var request = new XMLHttpRequest();
-var url = "https://defense-in-derpth.herokuapp.com/sendLocation";
+var url = "https://guarded-bastion-60258.herokuapp.com/sendLocation"; // edited for Lab 7 and Assignment 3
 
 
 var my_position;
