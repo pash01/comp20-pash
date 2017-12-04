@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title> Assignment #4 </title>
+	<meta charset="utf=8"/>
+	<link href="style.css" rel="stylesheet"/>
+</head>
+
+<body>
+	<h1> Introduction </h1>
+		<p>I was to hired to document and resolve security and privacy vulnerabilities in a given web application. 
+		This web application, the product I was hired to work on, stores information about historic landmarks in the 
+		Boston-area, as well as certain people's login information and geolocations at which they checked-in. The web 
+		application uses the Googlemaps API to show people and landmarks (within one mile of the client's current 
+		location) on a map. It also can list all check-ins with a given login name, and can list all the check-in 
+		information stored in the database.</p>
+
+	<h1> Methodology </h1>
+		<p> To test this application, I started by reading through the source code. Once I had a good understanding of 
+		the source code, I began scanning for possible vulnerabilities in the code. For example, I noticed that no 
+		checks were made on the data passed in (login, lat, lng), and that any non-null data was accepted. After I 
+		found a possible security or privacy issue, I used various tools to test this and try to "break" the 
+		application. The tools I used were: curl commands, query strings, shell script, and mongodb.</p>
+
+	<h1> Abstract of Findings </h1>
+		<p> I identified three security/privacy issues in the product. The first issue is that the data the user sends 
+		in, in this case their login info and their current location, is automatically trusted and is not checked. It 
+		is possible that a user may send in "bad" data. For example, a user could send in an invalid latitude and 
+		longitude, and the web application wouldn't notice or do anything about it. This can become more problematic 
+		when the user sends in data that can actually change the product, like javascript code.</p>
+		<p> The second issue identified involved being able to overload the database with check-in information. The 
+		database takes no precautions to limit the amount of data it takes in within a certain amount of time. Given 
+		this, it is possible for a user to send an infinite amount of information to the database. If a user 
+		continuously sends information in for a long enough period of time, the owner of the database could be charged 
+		money and the web application could eventually crash.</p>
+		<p> The third issue I found was that a user can manipulate the url in a way that gives them access to data/
+		information that they should not have access to. For web applications in which sensitive information is 
+		stored, like a password, this issue can be particularly problematic. In this web application, the user can add 
+		to the url so that the page displays all the check-in information.</p>
+
+	<h1> Issues Found </h1>
+		<p> Issue #1 </p>
+			<ul><li>Issue: Cross-Site Scripting </li> <li>Location of Issue: Post request for /sendLocation </li> <li>
+			Severity of Issue: This is a high severity issue, since anyone who is able to send in data can link to a 
+			totally new web-page. This makes the page completely unable to be used as it was intended. </li><li>
+			Description of Issue: I found this issue using the following curl command: <p><img src="curl_command.png" 
+			alt="curl command"/></p></li> <li>Proof of Vulnerability: Upon typing in this URL: "https://
+			enigmatic-gorge-40965.herokuapp.com", the following page is loaded: <p><img src="redirected_site.png" alt="
+			redirected web page: omfgdogs.com"/></p></li> <li>Resolution: To resolve this issue, the server would have 
+			to limit data sent in to not include special characters. By doing this, data sent in that includes special 
+			characters, javascript code, for example, will not be considered valid input and thus will not be used.</li
+			></ul>
+		<p> Issue #2 </p>
+			<ul><li>Issue: Overloading Database </li> <li>Location of Issue: MongoDB Limits/Thresholds (or lack 
+			thereof) </li> <li>Severity of Issue: This is a medium severity issue. By overloading the database with 
+			check-ins, the owner of the page will eventually be charged by Mongo, and the page could eventually crash. 
+			The infinite loops would have to run for a considerable amount of time before the page crashes, but it is 
+			possible. For this reason, and the risk of being charged, this issue has medium severity.</li> <li>
+			Description of Issue: This issue was found by creating a shell script file (pictured below) and running it 
+			on the command line. <p><img src="shell_script.png" alt="shell script file"/></p> </li> <li>Proof of 
+			Vulnerability: The beginning of the infinite list of check-ins (after running the script above) can be seen here: <p><img src="command_line.png" alt="script run on command line"/></p> Additionally, the number of checkins in the Mongo database increased after running this command. <p><img src="database_1.png" alt="
+			mongo database number of checkins before running shell script"/></p> <p><img src="database_2.png" alt="
+			mongo database number of checkins after running shell script"/></p> </li> <li>Resolution: Rate limiting 
+			can be used to limit the number of objects created within a collection in a given amount of time. This 
+			would stop the infinite loop, run in the shell script, from creating more check-ins after a specified 
+			amount of time.</li></ul>
+		<p> Issue #3 </p>
+			<ul><li>Issue: Query Strings </li> <li>Location of Issue: query strings within /checkins.json </li> <li>
+			Severity of Issue: For this particular assignment/web page, this issue is a low severity one. The client 
+			has access to the check-ins (people's login and geolocation) on the page, so using a query string to access stored information isn't so problematic. However, had passwords also been stored, or had it been a 
+			different situation in which the client should not have access to some stored information, then this issue 
+			would be much more severe.</li> <li>Description of Issue: I found this issue by using the following query 
+			string for the /checkins.json request: <p><img src="query.png" alt="query string used to get stored 
+			checkins"/></p> This query string showed all the check-ins except the ones with login names matching 
+			"awood".</li> <li>Proof of Vulnerability: The image below shows all the check-ins displayed from using the 
+			query string. Clearly many check-ins, including people's logins and locations, are displayed. <p><img src="
+			checkins.png" alt="list of checkins printed"/></p> </li> <li>Resolution: One way to fix this issue is by 
+			escaping strings, which can be done using the mongo-escape tool, for example. Doing this will stop certain 
+			commands from being run depending on the query string, for instance if the query string contains special 
+			characters. This will help stop users from using query strings in a problematic way to access information 
+			they should have access to.</li></ul>
+
+	<h1> Conclusion </h1>
+		<p> Ultimately, this product has various security and privacy vulnerabilities. One easy way to make this web 
+		application more secure would be to check the data passed in by the user and make sure to only store valid 
+		input. Additionally, the web application could be more careful not just about what type of data it is 
+		accepting, but how much data. Adding a limit to amount of information accepted in a given amount of time would prevent security issues (as mentioned above). Checking information passed in through query strings will also prevent potential security and privacy issues. These are likely not the only vulnerabilities in this product, but the suggestions mentioned will definitely help make the web program more secure. </p>
+
+	<h1> References </h1>
+		<p> In addition to getting help from TA's and using class notes for this work, I used the below references:</p>
+		<p><a href="https://stackoverflow.com/questions/5411538/redirect-from-an-html-page">https://stackoverflow.com/questions/5411538/redirect-from-an-html-page</a></p>
+		<p><a href="https://www.cyberciti.biz/faq/bash-infinite-loop/">https://www.cyberciti.biz/faq/bash-infinite-loop/</a></p>
+		<p><a href="https://stackoverflow.com/questions/8775079/how-to-rate-limit-an-api">https://stackoverflow.com/questions/8775079/how-to-rate-limit-an-api</a></p>
+		<p><a href="https://www.npmjs.com/package/mongo-escape">https://www.npmjs.com/package/mongo-escape</a></p>
+</body>
+
+</html>
